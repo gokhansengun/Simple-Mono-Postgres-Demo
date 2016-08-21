@@ -16,10 +16,6 @@ services:
       - "8090:8090"
     volumes:
       - artifact:/artifact
-    depends_on:
-      - build
-      - db
-      - flyway-migrator
     working_dir: /artifact
     command: [ mono,  /artifact/UniversityRegistrationSystem.exe ]
 
@@ -37,8 +33,6 @@ services:
       dockerfile: ./Docker/Dockerfile-Flyway
     volumes:
       - ./PostgresMigrations:/flyway/sql
-    depends_on:
-      - db
     entrypoint: /scripts/wait-for-postgres-for-flyway.sh db postgres postgres secret 
     
 volumes:

@@ -15,12 +15,14 @@ namespace TestDataGenerator
         readonly static int CourseByStudent = 4;
         readonly static int StudentIdStart = 10000;
 
+        static List<Guid> userIds;
         static List<Course> CourseList;
         static List<Student> StudentList;
         static List<TakenCourse> TakenCourseList;
 
         public static void GenerateAll()
         {
+            GenerateUsers();
             GenerateCourses();
             GenerateStudents();
             GenerateTakenCourses();
@@ -29,6 +31,16 @@ namespace TestDataGenerator
             DumpCoursesToSQL();
             DumpStudentsToSQL();
             DumpTakenCoursesToSQL();
+        }
+
+        private static void GenerateUsers()
+        {
+            userIds = new List<Guid>();
+
+            for (int i = 0; i < NoOfStudents; ++i)
+            {
+                userIds.Add(Guid.NewGuid());
+            }
         }
 
         private static void DumpUsersToSQL()
@@ -68,7 +80,7 @@ namespace TestDataGenerator
                 // Generate the users, and user_roles
                 for (int i = 0; i < NoOfStudents; ++i)
                 {
-                    Guid userId = Guid.NewGuid();
+                    Guid userId = userIds[i];
 
                     statement = string.Format(sqlInsertUserStatementFormat,
                                               userId,
@@ -149,7 +161,8 @@ namespace TestDataGenerator
                 {
                     StudentId = (StudentIdStart + i).ToString(),
                     FirstName = string.Format("FN-{0}", StudentIdStart + i),
-                    LastName = string.Format("LN-{0}", StudentIdStart + i)
+                    LastName = string.Format("LN-{0}", StudentIdStart + i),
+                    UserId = userIds[i].ToString()
                 });
             }
         }
@@ -157,7 +170,7 @@ namespace TestDataGenerator
         private static void DumpStudentsToSQL()
         {
             const string fileName = "V005__Students.sql";
-            string sqlStatementFormat = "INSERT INTO students(student_id, first_name, last_name) values('{0}', '{1}', '{2}');";
+            string sqlStatementFormat = "INSERT INTO students(student_id, first_name, last_name, user_id) values('{0}', '{1}', '{2}', '{3}');";
 
             using (StreamWriter file = new StreamWriter(fileName))
             {
@@ -166,7 +179,8 @@ namespace TestDataGenerator
                     string statement = string.Format(sqlStatementFormat,
                                                      student.StudentId,
                                                      student.FirstName,
-                                                     student.LastName);
+                                                     student.LastName,
+                                                     student.UserId);
                     file.WriteLine(statement);
                 }
             }

@@ -1,4 +1,4 @@
-.PHONY: build flyway-migrator app clean ps
+.PHONY: build flyway-migrator app db down clean ps
 
 build:
 	docker-compose up build
@@ -12,6 +12,9 @@ app: build flyway-migrator
 
 db:
 	docker-compose up -d db
+
+down:
+	docker-compose down -v
 
 clean:
 	docker-compose down -v
