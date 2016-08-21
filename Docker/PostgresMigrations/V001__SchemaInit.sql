@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE TABLE "public"."asp_net_roles"( 
 	"id" varchar(128) NOT NULL,
 	"description" text,
@@ -49,8 +47,6 @@ ALTER TABLE "public"."asp_net_users" ADD CHECK (char_length("email") <= 256);
 ALTER TABLE "public"."asp_net_users" ADD CHECK (char_length("user_name") <= 256);
 ALTER TABLE "public"."asp_net_users" ADD CHECK (char_length("first_name") <= 256);
 ALTER TABLE "public"."asp_net_users" ADD CHECK (char_length("last_name") <= 256);
-
-COMMIT;
 
 CREATE SEQUENCE "public"."asp_net_user_claims_id_seq" INCREMENT BY 1 MINVALUE 1 START WITH 1 OWNED BY "public"."asp_net_user_claims"."id";
 ALTER TABLE "public"."asp_net_roles" ADD CONSTRAINT "pk_dbo.asp_net_roles" PRIMARY KEY ("id");

@@ -2,3 +2,6 @@ packages
 *.userprefs
 UniversityRegistrationSystem/bin
 UniversityRegistrationSystem/obj
+TestDataGenerator/bin
+TestDataGenerator/obj
+*.log

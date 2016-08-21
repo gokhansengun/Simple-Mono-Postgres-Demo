@@ -26,14 +26,13 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("login");
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                { 
-                    connection.Execute(FileHandler.ReadFileContent("UserLogin.Create.sql"),
-                        new { userId = user.Id, loginProvider = login.LoginProvider, providerKey = login.ProviderKey });
-                }
-            });
+                connection.Execute(FileHandler.ReadFileContent("UserLogin.Create.sql"),
+                    new { userId = user.Id, loginProvider = login.LoginProvider, providerKey = login.ProviderKey });
+            }
+
+            return Task.FromResult(0);
         }
 
         public virtual Task<TUser> FindAsync(UserLoginInfo login)
@@ -43,14 +42,11 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("login");
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                { 
-                    return connection.Query<TUser>(FileHandler.ReadFileContent("User.FindByProviderAndKey.sql"),
-                        login).SingleOrDefault();
-                }
-            });
+                return Task.FromResult(connection.Query<TUser>(FileHandler.ReadFileContent("User.FindByProviderAndKey.sql"),
+                                                               login).SingleOrDefault());
+            }
         }
 
         public virtual Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user)
@@ -60,13 +56,10 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("user");
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                { 
-                    return (IList<UserLoginInfo>)connection.Query<UserLoginInfo>(FileHandler.ReadFileContent("UserLogin.FindById.sql"), new { user.Id }).ToList();
-                }
-            });
+                return Task.FromResult((IList<UserLoginInfo>)connection.Query<UserLoginInfo>(FileHandler.ReadFileContent("UserLogin.FindById.sql"), new { user.Id }).ToList());
+            }
         }
 
         public virtual Task RemoveLoginAsync(TUser user, UserLoginInfo login)
@@ -81,14 +74,13 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("login");
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                {
-                    connection.Execute(FileHandler.ReadFileContent("UserLogin.RemoveLoginByProviderAndKey.sql"),
-                        new { userId = user.Id, login.LoginProvider, login.ProviderKey });
-                }
-            });
+                connection.Execute(FileHandler.ReadFileContent("UserLogin.RemoveLoginByProviderAndKey.sql"),
+                    new { userId = user.Id, login.LoginProvider, login.ProviderKey });
+            }
+
+            return Task.FromResult(0);
         }
     }
 }

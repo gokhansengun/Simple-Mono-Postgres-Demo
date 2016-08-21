@@ -109,7 +109,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Customer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -135,6 +134,11 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="OwinCustomMiddleware\GlobalExceptionMiddleware.cs" />
+    <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Model\Course.cs" />
+    <Compile Include="Model\Student.cs" />
+    <Compile Include="Model\TakenCourse.cs" />
+    <Compile Include="Providers\IdentityPasswordHasher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -190,20 +194,19 @@
     <None Include="Dockerfile">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Docker\docker-compose.yml" />
-    <None Include="Docker\Dockerfile-Flyway" />
-    <None Include="Docker\wait-for-postgres-for-flyway.sh" />
-    <None Include="Docker\PostgresMigrations\V002__SeedInitialData.sql" />
-    <None Include="Docker\PostgresMigrations\V001__SchemaInit.sql" />
-    <None Include="Docker\Dockerfile-Mono-Build" />
+    <None Include="Sql\Registration.CoursesByStudent.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sql\Registration.AddCourseForStudent.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="OwinCustomMiddleware\" />
     <Folder Include="DbSetupScripts\" />
-    <Folder Include="Docker\" />
-    <Folder Include="Docker\PostgresMigrations\" />
     <Folder Include="DbSetupScripts\PostgresSeed\" />
+    <Folder Include="Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

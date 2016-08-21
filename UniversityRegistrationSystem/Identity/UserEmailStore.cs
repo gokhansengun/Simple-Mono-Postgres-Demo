@@ -19,13 +19,12 @@ namespace UniversityRegistrationSystem.Identity
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                { 
-                    connection.Execute(FileHandler.ReadFileContent("User.UpdateEmailById.sql"), user);
-                }
-            });
+                connection.Execute(FileHandler.ReadFileContent("User.UpdateEmailById.sql"), user);
+            }
+
+            return Task.FromResult(0);
         }
 
         public Task<string> GetEmailAsync(TUser user)
@@ -40,13 +39,12 @@ namespace UniversityRegistrationSystem.Identity
 
         public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
         {
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                { 
-                    connection.Execute(FileHandler.ReadFileContent("User.UpdateEmailConfirmedById.sql"), user);
-                }
-            });
+                connection.Execute(FileHandler.ReadFileContent("User.UpdateEmailConfirmedById.sql"), user);
+            }
+
+            return Task.FromResult(0);
         }
 
         public Task<TUser> FindByEmailAsync(string email)
@@ -56,13 +54,10 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("email");
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                { 
-                    return connection.Query<TUser>(FileHandler.ReadFileContent("User.FindByEmail.sql"), new { email }).SingleOrDefault();
-                }
-            });
+                return Task.FromResult(connection.Query<TUser>(FileHandler.ReadFileContent("User.FindByEmail.sql"), new { email }).SingleOrDefault());
+            }
         }
     }
 }

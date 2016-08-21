@@ -46,7 +46,15 @@ namespace UniversityRegistrationSystem.Controllers
         {
             get
             {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                ApplicationUserManager um = _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+                if (_userManager == null)
+                {
+                    um.PasswordHasher = new IdentityPasswordHasher();
+                    _userManager = um;
+                }
+
+                return um;
             }
             private set
             {

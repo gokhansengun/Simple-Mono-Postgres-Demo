@@ -21,14 +21,14 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("user");
             }
 
-            return Task.Factory.StartNew(() => {
-                user.Id = Guid.NewGuid().ToString();
+            user.Id = Guid.NewGuid().ToString();
 
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                { 
-                    connection.Execute(FileHandler.ReadFileContent("User.Create.sql"), user);
-                }
-            });
+            using (var connection = DbConnectionFactory.NewDbConnection())
+            {
+                connection.Execute(FileHandler.ReadFileContent("User.Create.sql"), user);
+            }
+
+            return Task.FromResult(0);
         }
 
         public virtual Task DeleteAsync(TUser user)
@@ -38,13 +38,12 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("user");
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                {
-                    connection.Execute(FileHandler.ReadFileContent("User.DeleteById.sql"), new { user.Id });
-                }
-            });
+                connection.Execute(FileHandler.ReadFileContent("User.DeleteById.sql"), new { user.Id });
+
+                return Task.FromResult(0);
+            }
         }
 
         public virtual Task<TUser> FindByIdAsync(string id)
@@ -60,13 +59,10 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentOutOfRangeException("id", string.Format("'{0}' is not a valid GUID.", new { id }));
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                { 
-                    return connection.Query<TUser>(FileHandler.ReadFileContent("User.FindById.sql"), new { id = parsedUserId.ToString() }).SingleOrDefault();
-                }
-            });
+                return Task.FromResult(connection.Query<TUser>(FileHandler.ReadFileContent("User.FindById.sql"), new { id = parsedUserId.ToString() }).SingleOrDefault());
+            }
         }
 
         public virtual Task<TUser> FindByNameAsync(string userName)
@@ -76,13 +72,12 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("userName");
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                {
-                    return connection.Query<TUser>(FileHandler.ReadFileContent("User.FindByName.sql"), new { userName }).SingleOrDefault();
-                }
-            });
+                var result = connection.Query<TUser>(FileHandler.ReadFileContent("User.FindByName.sql"), new { userName }).SingleOrDefault();
+
+                return Task.FromResult<TUser>(result);
+            }
         }
 
         public virtual Task UpdateAsync(TUser user)
@@ -92,13 +87,12 @@ namespace UniversityRegistrationSystem.Identity
                 throw new ArgumentNullException("user");
             }
 
-            return Task.Factory.StartNew(() =>
+            using (var connection = DbConnectionFactory.NewDbConnection())
             {
-                using (var connection = DbConnectionFactory.NewDbConnection())
-                {
-                    connection.Execute(FileHandler.ReadFileContent("User.Update.sql"), user);
-                }
-            });
+                connection.Execute(FileHandler.ReadFileContent("User.Update.sql"), user);
+
+                return Task.FromResult(0);
+            }
         }
     }
 }

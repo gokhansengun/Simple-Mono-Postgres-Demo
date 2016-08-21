@@ -31,7 +31,9 @@ namespace UniversityRegistrationSystem.Providers
         {
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
-            CustomUser user = await userManager.FindAsync(context.UserName, context.Password);
+            userManager.PasswordHasher = new IdentityPasswordHasher();
+
+            CustomUser user = await userManager.FindAsync(context.UserName, context.Password).ConfigureAwait(continueOnCapturedContext: false);
 
             if (user == null)
             {
