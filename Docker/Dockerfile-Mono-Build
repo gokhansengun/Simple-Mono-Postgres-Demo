@@ -1,0 +1,17 @@
+﻿FROM mono:latest
+
+MAINTAINER Gokhan Sengun <gokhansengun@gmail.com>
+
+# update nuget itself
+RUN nuget update -self
+
+RUN mkdir -p /usr/src/app/source
+WORKDIR /usr/src/app/source
+
+COPY . /usr/src/app/source
+RUN nuget restore -NonInteractive
+RUN xbuild /property:Configuration=Debug /property:OutDir=/artifact/
+
+WORKDIR /artifact
+
+CMD [ "/bin/true" ]

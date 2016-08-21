@@ -1,0 +1,16 @@
+﻿FROM shouldbee/flyway
+
+MAINTAINER Gokhan Sengun <gokhansengun@gmail.com>
+
+RUN apt-get update && apt-get -y install postgresql-client
+
+COPY Docker/wait-for-postgres-for-flyway.sh /scripts/wait-for-postgres-for-flyway.sh
+
+# only a hack, will be fixed in later version of docker-compose
+RUN chmod +x /scripts/wait-for-postgres-for-flyway.sh
+
+WORKDIR /flyway
+
+ENTRYPOINT ["flyway"]
+
+CMD ["--help"]

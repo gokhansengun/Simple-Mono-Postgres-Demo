@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+
+  urs_build:
+    image: urs-build
+    build:
+      context: ../
+      dockerfile: ./Docker/Dockerfile-Mono-Build
+    volumes:
+      - artifact:/artifact
+
+  urs_web:
+    image: mono:latest
+    ports:
+      - "8090:8090"
+    volumes:
+      - artifact:/artifact
+    depends_on:
+      - urs_build
+      - urs_db
+    command: [ mono,  /artifact/UniversityRegistrationSystem.exe ]
+
+  urs_db:
+    image: postgres:9.3
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=secret
+
+  flyway-migrator:
+    image: urs-flyway-migrator
+    build:
+      context: ../
+      dockerfile: ./Docker/Dockerfile-Flyway
+    volumes:
+      - ./PostgresMigrations:/flyway/sql
+    depends_on:
+      - urs_db
+    entrypoint: /scripts/wait-for-postgres-for-flyway.sh urs_db postgres postgres secret 
+    
+volumes:
+  artifact:
+    driver: local
