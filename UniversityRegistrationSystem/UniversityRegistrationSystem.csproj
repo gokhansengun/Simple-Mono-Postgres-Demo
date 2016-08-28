@@ -124,8 +124,8 @@
     <Compile Include="Identity\UserRoleStore.cs" />
     <Compile Include="Identity\UserSecurityStampStore.cs" />
     <Compile Include="Identity\UserTwoFactorStore.cs" />
-    <Compile Include="Models\AccountBindingModels.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="ViewModels\AccountBindingModels.cs" />
+    <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="OwinConfig\IdentityConfig.cs" />
     <Compile Include="OwinConfig\WebApiConfig.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -139,6 +139,7 @@
     <Compile Include="Model\Student.cs" />
     <Compile Include="Model\TakenCourse.cs" />
     <Compile Include="Providers\IdentityPasswordHasher.cs" />
+    <Compile Include="DTO\NewCourseRequestDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -200,13 +201,15 @@
     <None Include="Sql\Registration.AddCourseForStudent.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Sql\Registration.ListCoursesByDepartmentYearSeason.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="OwinCustomMiddleware\" />
-    <Folder Include="DbSetupScripts\" />
-    <Folder Include="DbSetupScripts\PostgresSeed\" />
     <Folder Include="Model\" />
+    <Folder Include="DTO\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

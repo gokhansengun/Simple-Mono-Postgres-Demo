@@ -12,12 +12,6 @@ using Microsoft.AspNet.Identity;
 
 namespace UniversityRegistrationSystem
 {
-    public class NewCourseRequest
-    {
-        public string studentId { get; set; }
-        public string courseId { get; set; }
-    }
-
     [Authorize]
     [RoutePrefix("api/Registration")]
     public class RegistrationController : ApiController
@@ -44,7 +38,7 @@ namespace UniversityRegistrationSystem
 
         [HttpPost]
         [Authorize(Roles = "Admin, Users")]
-        public IHttpActionResult AddCourseForStudent([FromBody]NewCourseRequest ncr)
+        public IHttpActionResult AddCourseForStudent([FromBody]NewCourseRequestDto ncr)
         {
             // TODO: gseng - add parameter tempering guard here.
             
@@ -52,7 +46,7 @@ namespace UniversityRegistrationSystem
             {
                 var affectedRows = connection.Execute(
                         FileHandler.ReadFileContent("Registration.AddCourseForStudent.sql"),
-                            new { studentId = ncr.studentId, courseId = ncr.courseId });
+                            new { studentId = ncr.StudentId, courseId = ncr.CourseId });
 
                 if (affectedRows > 0)
                 {
@@ -62,6 +56,21 @@ namespace UniversityRegistrationSystem
                 {
                     return InternalServerError();
                 }
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult ListCoursesByDepartmentYearSeason(
+            string departmentName, int year, int season)
+        {
+            using (var connection = DbConnectionFactory.NewDbConnection())
+            {
+                IEnumerable<Course> courses =
+                    connection.Query<Course>(
+                        FileHandler.ReadFileContent("Registration.ListCoursesByDepartmentYearSeason.sql"),
+                            new { departmentName, year, season });
+
+                return Ok(courses);
             }
         }
     }

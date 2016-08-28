@@ -116,6 +116,7 @@ namespace TestDataGenerator
         private static void GenerateCourses()
         {
             CourseList = new List<Course>();
+            var rnd = new Random();
 
             foreach (var departmentInitial in DepartmentInitials)
             {
@@ -124,9 +125,11 @@ namespace TestDataGenerator
                     CourseList.Add(new Course
                     {
                         CourseId = string.Format("{0}{1}", departmentInitial, i),
-                        Credit = new Random().Next(2, 5),
+                        Credit = rnd.Next(2, 5),
                         Department = departmentInitial,
-                        Instructor = string.Format("Instructor-{0}", new Random().Next(2, 5))
+                        Instructor = string.Format("Instructor-{0}", new Random().Next(2, 5)),
+                        Season = rnd.Next(0, 2),
+                        Year = 2016
                     });
                 }
             }
@@ -135,7 +138,7 @@ namespace TestDataGenerator
         private static void DumpCoursesToSQL()
         {
             const string fileName = "V004__Courses.sql";
-            string sqlStatementFormat = "INSERT INTO courses(course_id, credit, department, instructor) values('{0}', {1}, '{2}', '{3}');";
+            string sqlStatementFormat = "INSERT INTO courses(course_id, credit, department, instructor, season, year) values('{0}', {1}, '{2}', '{3}', '{4}', '{5}');";
 
             using (StreamWriter file = new StreamWriter(fileName))
             {
@@ -145,7 +148,9 @@ namespace TestDataGenerator
                                                      course.CourseId,
                                                      course.Credit,
                                                      course.Department,
-                                                     course.Instructor);
+                                                     course.Instructor,
+                                                     course.Season,
+                                                     course.Year);
                     file.WriteLine(statement);
                 }
             }
@@ -201,8 +206,8 @@ namespace TestDataGenerator
                     TakenCourseList.Add(new TakenCourse
                     {
                         CourseId = course.CourseId,
-                        Season = 2016,
-                        Year = rnd.Next(0, 2),
+                        Season = course.Season,
+                        Year = course.Year,
                         StudentId = StudentList[i].StudentId
                     });
                 }

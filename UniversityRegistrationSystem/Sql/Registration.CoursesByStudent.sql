@@ -7,7 +7,7 @@ SELECT
     c.credit AS Credit,
     c.department AS Department,
     c.instructor AS Instructor, 
-    season 
+    tc.season 
 FROM taken_courses tc
 INNER JOIN courses c ON c.course_id = tc.course_id
 INNER JOIN students s ON tc.student_id = s.student_id

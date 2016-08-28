@@ -2,7 +2,9 @@ CREATE TABLE "public"."courses"(
 	"course_id" varchar(8) NOT NULL,
 	"credit" int,
 	"department" varchar(8) NOT NULL,
-	"instructor" varchar(64) NOT NULL
+	"instructor" varchar(64) NOT NULL,
+    "year" int,
+    "season" int
 );
 
 CREATE TABLE "public"."students"(
