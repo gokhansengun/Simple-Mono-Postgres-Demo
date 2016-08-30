@@ -11,9 +11,9 @@ namespace TestDataGenerator
         readonly static int CourseIdStart = 100;
         readonly static int CourseIdEnd = 600;
 
-        readonly static int NoOfStudents = 10000;
-        readonly static int CourseByStudent = 4;
-        readonly static int StudentIdStart = 10000;
+        readonly static int NoOfStudents = 100000;
+        readonly static int CourseByStudent = 8;
+        readonly static int StudentIdStart = 100000;
 
         static List<Guid> userIds;
         static List<Course> CourseList;
